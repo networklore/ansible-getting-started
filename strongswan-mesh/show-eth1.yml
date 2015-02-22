@@ -1,0 +1,5 @@
+---
+- hosts: vpn
+  tasks:
+  - name: show eth1 ip
+    debug: msg={{ ansible_eth1.ipv4.address }}

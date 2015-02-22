@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+
+#  basic configuration
+
+config setup
+
+conn %default
+ ikelifetime=1440m
+ keylife=60m
+ rekeymargin=3m
+ keyingtries=1
+ keyexchange=ikev1
+ authby=secret
+
+
+# Connections will be added here
+
+{% for host in groups['vpn'] %}
+{% if not ansible_hostname == hostvars[host].ansible_hostname %}
+conn {{ hostvars[host].ansible_hostname }}
+ type=tunnel
+ ike=aes128-sha1-modp2048,3des-sha1-modp1536,3des-sha1-modp1024
+ esp=aes128-sha1,3des-sha1
+ left={{ ansible_eth0.ipv4.address }}
+ leftfirewall=yes
+ leftsubnet={{ ansible_eth1.ipv4.network }}/16
+ leftid={{ ansible_eth0.ipv4.address }}
+ right={{ hostvars[host].ansible_eth0.ipv4.address }}
+ rightsubnet={{ hostvars[host].ansible_eth1.ipv4.network }}/16
+ rightid={{ hostvars[host].ansible_eth0.ipv4.address }}
+ dpddelay=30
+ dpdtimeout=120
+ dpdaction=hold
+ keyexchange=ikev1
+ auto=start
+
+{% endif %}
+{% endfor %}

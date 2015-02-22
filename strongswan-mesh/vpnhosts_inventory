@@ -1,0 +1,15 @@
+
+# Define a group called vpn
+[vpn]
+
+# Only use Ubuntu 14.04 and CentOS 6.5
+# These hosts need to be resolvable through
+# DNS or your hosts file. Or you can specify the
+# ip address with an Ansible variable by typing
+# ansible_ssh_host=192.168.1.10 after the hostname
+
+ams-vpn-1
+lon-vpn-1
+ny-vpn-1
+sin-vpn-1
+

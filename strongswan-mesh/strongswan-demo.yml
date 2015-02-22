@@ -1,0 +1,9 @@
+---
+- hosts: vpn
+  vars:
+    is_centos: "'{{ ansible_distribution|lower }}' == 'centos'"
+    is_ubuntu: "'{{ ansible_distribution|lower }}' == 'ubuntu'"
+  vars_files:
+    - "vars/{{ ansible_distribution|lower }}.yml"
+  roles:
+  - strongswan

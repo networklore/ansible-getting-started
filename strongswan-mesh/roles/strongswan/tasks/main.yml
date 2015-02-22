@@ -1,0 +1,27 @@
+---
+# Tasks to install and configure strongSwan
+
+- name: Downloading the EPEL repository definitions (CentOS 6)
+  get_url: url=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm dest={{ ansible_env.HOME }}/epel-release-6-8.noarch.rpm
+  when: is_centos
+
+- name: Downloading and enable the EPEL repository definitions (CentOS 6)
+  yum: name={{ ansible_env.HOME }}/epel-release-6-8.noarch.rpm state=present
+  when: is_centos
+
+- name: Install strongSwan (CentOS)
+  yum: pkg=strongswan state=present
+  when: is_centos
+
+- name: Install strongSwan (Ubuntu)
+  apt: pkg=strongswan state=present
+  when: is_ubuntu
+
+- name: Configure ipsec.conf
+  template: src=ipsec.conf.j2 dest={{ strongswan_base }}/ipsec.conf owner=root group=root mode=0644
+  notify: restart strongswan
+
+- name: Configure ipsec.secrets
+  template: src=ipsec.secrets.j2 dest={{ strongswan_base }}/ipsec.secrets owner=root group=root mode=0600
+  notify: restart strongswan
+
